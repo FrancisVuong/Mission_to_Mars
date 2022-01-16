@@ -60,32 +60,24 @@ def mars_news(browser):
 def featured_image(browser):
 
     # Visit URL
-    url = 'https://www.jpl.nasa.gov/spaceimages/?search=&category=Mars'
+    url = 'https://spaceimages-mars.com'
     browser.visit(url)
 
     # Find and click the full image button
-    full_image_elem = browser.find_by_id('full_image')[0]
+    full_image_elem = browser.find_by_id('button')[1]
     full_image_elem.click()
-
-    # Find the more info button and click that
-    browser.is_element_present_by_text('more info', wait_time=1)
-    more_info_elem = browser.links.find_by_partial_text('more info')
-    more_info_elem.click()
 
     # Parse the resulting html with soup
     html = browser.html
     img_soup = soup(html, 'html.parser')
 
-    # Add try/except for error handling
-    try:
-        # Find the relative image url
-        img_url_rel = img_soup.select_one('figure.lede a img').get("src")
-
-    except AttributeError:
-        return None
+    # Find the relative image url
+    img_url_rel = img_soup.find('img', class_='fancybox-image').get('src')
+    img_url_rel
 
     # Use the base URL to create an absolute URL
-    img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
+    img_url = f'https://spaceimages-mars.com{img_url_rel}'
+    img_url
         
     return img_url
 
